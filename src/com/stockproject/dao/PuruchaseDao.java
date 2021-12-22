@@ -48,12 +48,12 @@ public void updated(Purchase purchase1 ) throws SQLException, ClassNotFoundExcep
 	pstmt.setString(1, purchase2.getProductName());
 	int i=pstmt.executeUpdate();
 	System.out.println(i+"delete");
-	
+	}
 	
 		
 		
 		
 
-}
+
 }
 

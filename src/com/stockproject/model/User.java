@@ -3,11 +3,20 @@ package com.stockproject.model;
 import java.util.Objects;
 
 public class User {
+	private int userId; 
 	private String userName;
 	private String email;
 	private String address;
 	private String password;
 	private long phoneNumber;
+	
+	
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	public String getUserName() {
 		return userName;
 	}
@@ -62,10 +71,27 @@ public class User {
 		this.email = email;
 		this.password = password;
 	}
+	
+	public User(int userId, String userName, String email, String address, String password, long phoneNumber) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.email = email;
+		this.address = address;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+	}
 	public User(String emailid, String password) {
 		super();
 		this.email = emailid;
 		this.password = password;
+	}
+	public User(int userId, String userName, String emailid, String password) {
+		// TODO Auto-generated constructor stub
+		this.userId=userId;
+		this.userName=userName;
+		this.email=emailid;
+		this.password=password;
 	}
 	@Override
 	public int hashCode() {
@@ -83,6 +109,15 @@ public class User {
 		return Objects.equals(address, other.address) && Objects.equals(email, other.email)
 				&& Objects.equals(password, other.password) && phoneNumber == other.phoneNumber
 				&& Objects.equals(userName, other.userName);
+	}
+	public User(String password, long phoneNumber) {
+		super();
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+	}
+	public User(String email) {
+		super();
+		this.email = email;
 	}
 		
 	
