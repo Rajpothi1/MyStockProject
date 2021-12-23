@@ -10,7 +10,9 @@ import com.stockproject.model.*;
 import com.stockproject.dao.AdminDao;
 import com.stockproject.dao.CartDao;
 import com.stockproject.dao.InvoiceBillDao;
+import com.stockproject.dao.PuruchaseDao;
 import com.stockproject.dao.StackDao;
+import com.stockproject.dao.SupplierDao;
 import com.stockproject.dao.UserDao;
 import com.stockproject.model.Admin;
 import com.stockproject.model.Stock;
@@ -18,6 +20,9 @@ import com.stockproject.model.User;
 
 public class TestMainCheck {
 
+	public static String proName;
+	public static int quantity;
+    public static String adminpro;
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		// TODO Auto-generated method stub
 
@@ -34,8 +39,8 @@ public class TestMainCheck {
 			String address = null;
 			String password = null;
 			long phonenumber = 0;
-			User user=null;
-			
+			User user = null;
+
 			do {
 				System.out.println("enter the user name");
 				userName = scan.nextLine();
@@ -87,83 +92,87 @@ public class TestMainCheck {
 				}
 			} while (!MobileNumber.matches("[6-9]{1}[0-9]{9}"));
 			Long phonenumber1 = Long.parseLong(MobileNumber);
-		    // user = new User(0, userName, email, password);
-			 user=new User(userName, email, address, password,  phonenumber1);
+			// user = new User(0, userName, email, password);
+			user = new User(userName, email, address, password, phonenumber1);
 			userDao.insert(user);
 		case 2:
 			user = new User();
 			do {
 				System.out.println("\n1.login \n2.Forget password\n3.Delete your account");
 				int userchoice = Integer.parseInt(scan.nextLine());
-				
-				switch(userchoice) {
+
+				switch (userchoice) {
 				case 1:
-				System.out.println("\n emailid");
-				String emailid = scan.nextLine();
-				System.out.println("\nenter password");
-				String password1 = scan.nextLine();
-				currentUser = new UserDao();
-				user = UserDao.validateUser(emailid, password1);
-				if (user != null) {
-					System.out.println("login successed " + user.getUserName());
-					System.out.println("\nshow product");
+					System.out.println("\n emailid");
+					String emailid = scan.nextLine();
+					System.out.println("\nenter password");
+					String password1 = scan.nextLine();
+					currentUser = new UserDao();
+					user = UserDao.validateUser(emailid, password1);
+					if (user != null) {
+						System.out.println("login successed " + user.getUserName());
+						System.out.println("\nshow product");
 
-					StackDao prodao = new StackDao();
-					prodao.showProduct();
-					char youChoice;
-					do {
-					System.out.println("\nenter product name");
-					String proName = scan.nextLine();
+						StackDao prodao = new StackDao();
+						prodao.showProduct();
+						char youChoice;
+						do {
+							System.out.println("\nenter product name");
+							proName = scan.nextLine();
 
-					Stock userpro = prodao.validateProduct(proName);
-					System.out.println(userpro);
-					System.out.println("enter product quantity");
-					int quantity = Integer.parseInt(scan.nextLine());
+							Stock userpro = prodao.validateProduct(proName);
+							System.out.println(userpro);
+							System.out.println("enter product quantity");
+							quantity = Integer.parseInt(scan.nextLine());
 //					System.out.println(userpro.getUnitPrice());
-					double totalPrice=quantity*userpro.getUnitPrice();
-					System.out.println(totalPrice);
-					int userId=user.getUserId();
-					System.out.println("Enter you want expected date");
-					String tempDate= scan.nextLine();
-					Date date=new SimpleDateFormat("dd-MM-yyyy").parse(tempDate);
-					System.out.println(date);
-					
-//					System.out.println(userId);
-					int productId=userpro.getProductId();
-					Cart cart=new Cart(0, userId, productId, quantity, totalPrice, date);
-					CartDao cartdao=new CartDao();
-					cartdao.insert(cart);
-					System.out.println("Do you order more product y/n");
-					 youChoice=scan.nextLine().charAt(0);
-					}while(youChoice=='y'||youChoice=='Y');
-				}
-				else {
 
-					System.out.println("invalid entry");
-				}
+							prodao.updateQuantity(proName, quantity);
+
+							double totalPrice = quantity * userpro.getUnitPrice();
+							System.out.println(totalPrice);
+							int userId = user.getUserId();
+							System.out.println("Enter you want expected date");
+							String tempDate = scan.nextLine();
+							Date date = new SimpleDateFormat("dd-MM-yyyy").parse(tempDate);
+							System.out.println(date);
+
+//					System.out.println(userId);
+							int productId = userpro.getProductId();
+							Cart cart = new Cart(0, userId, productId, quantity, totalPrice, date);
+							CartDao cartdao = new CartDao();
+							cartdao.insert(cart);
+							System.out.println("Do you order more product y/n");
+							youChoice = scan.nextLine().charAt(0);
+						} while (youChoice == 'y' || youChoice == 'Y');
+					} else {
+
+						System.out.println("invalid entry");
+					}
+					
+					Purchase purchase=new Purchase();
+					PuruchaseDao puruchseDao=new PuruchaseDao();
+					
 //					System.out.println("bill");
 //					InvoiceBillDao obj = new InvoiceBillDao();
 //					obj.showProduct();
 					break;
-					case 2:
-						System.out.println("please enter your New password");
-						String  newpassword = scan.nextLine();
-						System.out.println("enter your phonenumber");
-						phonenumber = Long.parseLong(scan.nextLine());
-						 user=new User(newpassword,phonenumber);
-						userDao.updated(user);
-						break;
-					case 3:
-						System.out.println("Delete your account");
-						System.out.println("Delete your account mail id");
-						String deletemail=scan.nextLine();
-						user=new User(deletemail);
-						userDao.delete(user);
-						break;
+				case 2:
+					System.out.println("please enter your New password");
+					String newpassword = scan.nextLine();
+					System.out.println("enter your phonenumber");
+					phonenumber = Long.parseLong(scan.nextLine());
+					user = new User(newpassword, phonenumber);
+					userDao.updated(user);
+					break;
+				case 3:
+					System.out.println("Delete your account");
+					System.out.println("Delete your account mail id");
+					String deletemail = scan.nextLine();
+					user = new User(deletemail);
+					userDao.delete(user);
+					break;
 				}
-				
-						
-				
+
 			} while (user == null);
 			break;
 		case 3:
@@ -181,12 +190,31 @@ public class TestMainCheck {
 				admin21 = admin1.validateadmin(email1, pass);
 				if (admin21 != null) {
 					System.out.println("register successed " + admin21.getAdminName());
-					System.out.println("\n1.Add stock\n2.update stock\n3.delete stock");
+					StackDao prodao = new StackDao();
+					prodao.showProduct();
+
+					System.out.println("\n1.buy product\n2.new product insert\n3.update stock\n4.delete stock");
 					int select = Integer.parseInt(scan.nextLine());
 					Stock stock = null;
-					StackDao Sdao = null;
+					StackDao Sdao = new StackDao();
 					switch (select) {
 					case 1:
+						SupplierDao supplierDao = new SupplierDao();
+						supplierDao.showSupplier();
+						System.out.println("enter product name");
+					     adminpro=scan.nextLine();
+					    Supplier supplier=new Supplier(0, null, null, null, null, adminpro, 0, 0);
+					   Supplier crtSupply= supplierDao.validateProduct(adminpro);
+						System.out.println(crtSupply);
+						System.out.println("Enter product quantity");
+						
+						int adminqty=Integer.parseInt(scan.nextLine());
+						Stock pro1=new Stock(0, adminpro, adminqty, 0);
+						Sdao.Adminupdated(pro1);
+						
+						
+						break;
+					case 2:
 						System.out.println("Enter product name");
 						String proname = scan.nextLine();
 						System.out.println("Quantity");
@@ -198,16 +226,16 @@ public class TestMainCheck {
 						Sdao.insert(stock);
 						break;
 
-					case 2:
+					case 3:
 						System.out.println("i will update current price");
 						double price = Double.parseDouble(scan.nextLine());
 						System.out.println("for this product name");
 						String productname = scan.nextLine();
 						stock = new Stock(price, productname);
 						Sdao = new StackDao();
-						Sdao.updated(stock);
+//						Sdao.updated(stock);
 						break;
-					case 3:
+					case 4:
 						System.out.println("Delete product id");
 						int delete = Integer.parseInt(scan.nextLine());
 						stock = new Stock(delete);
@@ -220,6 +248,7 @@ public class TestMainCheck {
 					System.out.println("invalid entry");
 				}
 			} while (admin21 == null);
+			// here to write inovoice bill update code
 
 		}
 	}

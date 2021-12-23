@@ -2,8 +2,11 @@ package com.stockproject.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
+import com.stockproject.model.Stock;
 import com.stockproject.model.Supplier;
 
 public class SupplierDao {
@@ -57,7 +60,55 @@ public void delete(Supplier sup2) throws SQLException, ClassNotFoundException {
 	con.close();
 
 }	
-	
+public void showSupplier() {
+	String supplier= "select * from supplier";
+	Connection con;
+	try {
+		con = ConnectionUtil.gbConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(supplier);
+		while (rs.next()) {
+			System.out.format("%-5s%-12s%-12s%-22s%-12s%-10s%-10s%-10s\n", rs.getInt(1), rs.getString(2),rs.getString(3),
+					rs.getString(4), rs.getLong(5),
+					rs.getString(6),rs.getDouble(7), rs.getInt(8));
+					
+			System.out.println();
+		}
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+}
+public Supplier validateProduct(String adminpro) {
+
+	String validdateQuery = "select *from supplier where product_name=?";
+
+	try {
+		Connection con = ConnectionUtil.gbConnection();
+		PreparedStatement pstmt = con.prepareStatement(validdateQuery);
+		pstmt.setString(1, adminpro);
+		ResultSet rs = pstmt.executeQuery();
+		if (rs.next()) {
+			Supplier supplier=new Supplier(rs.getInt(1), rs.getString(2),rs.getString(3),
+					rs.getString(4), rs.getLong(5),
+					rs.getString(6),rs.getDouble(7), rs.getInt(8));
+					
+			System.out.println();
+        return supplier;
+		}
+
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return null;
+
+}
+
 
 }
 

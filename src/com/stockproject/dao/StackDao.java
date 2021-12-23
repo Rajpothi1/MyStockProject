@@ -57,16 +57,16 @@ public class StackDao {
 
 	}
 
-	public void updated(Stock pro1) {
+	public void Adminupdated(Stock pro1) {
 
-		String updateQuery = "update stock set price=? where product_name=?";
+	String updateQuery = "update stock set product_qty = product_qty + ? where product_name=?";
 
 		Connection con;
 		try {
 			con = ConnectionUtil.gbConnection();
 			PreparedStatement pstmt = con.prepareStatement(updateQuery);
 
-			pstmt.setDouble(1, pro1.getUnitPrice());
+			pstmt.setInt(1, pro1.getQuantity());
 			pstmt.setString(2, pro1.getProductName());
 			int i = pstmt.executeUpdate();
 			System.out.println(i + "updated");
@@ -75,6 +75,27 @@ public class StackDao {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void updateQuantity(String proName,int qty) {
+
+		String updateQuery = "update stock set product_qty = product_qty - ? where product_name=?";
+
+		Connection con;
+		try {
+			con = ConnectionUtil.gbConnection();
+			PreparedStatement pstmt = con.prepareStatement(updateQuery);
+
+			pstmt.setInt(1, qty);
+			pstmt.setString(2, proName);
+			int i = pstmt.executeUpdate();
+			System.out.println(i + "updated");
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
 			e.printStackTrace();
 		}
 	}

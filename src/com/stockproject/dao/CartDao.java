@@ -3,7 +3,10 @@ package com.stockproject.dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.stockproject.model.Cart;
 
@@ -36,5 +39,20 @@ public class CartDao {
 		}
 
 	}
+	public static List<Cart> cartDetails(Cart cart) throws ClassNotFoundException, SQLException {
+		List<Cart> cart1=new ArrayList<Cart>();
+		String alluser="Select * from cart";
+		
+		Connection con = ConnectionUtil.gbConnection();
+		PreparedStatement stmt=con.prepareStatement(alluser);
+		ResultSet rs=stmt.executeQuery();
+		while(rs.next())
+		{
+ Userdetail detail=new Userdetail(rs.getString(1),rs.getString(2),rs.getString(3),Long.parseLong(rs.getString(4)),rs.getInt(5),rs.getString(6));
+		}
+		     cartDetails.add(detail);
+		}
+		return cart1;
+
 
 }
