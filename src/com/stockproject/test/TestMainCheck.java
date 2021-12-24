@@ -22,7 +22,8 @@ public class TestMainCheck {
 
 	public static String proName;
 	public static int quantity;
-    public static String adminpro;
+	public static String adminpro;
+
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 		// TODO Auto-generated method stub
 
@@ -144,14 +145,53 @@ public class TestMainCheck {
 							System.out.println("Do you order more product y/n");
 							youChoice = scan.nextLine().charAt(0);
 						} while (youChoice == 'y' || youChoice == 'Y');
+
+						System.out.println("\n1.confirm order\n2.cancel order");
+						int orderchoice = Integer.parseInt(scan.nextLine());
+						CartDao cartDao = new CartDao();
+						switch (orderchoice) {
+
+						case 1:
+							int userId = user.getUserId();
+							Cart cart = new Cart(0, userId, 0, 0, 0, null);
+							System.out.println(userId);
+							List<Cart> cartList = cartDao.allcart(cart);
+							System.out.println(cartList);
+							for (int i = 0; i < cartList.size(); i++) {
+								Cart allOrder = cartList.get(i);
+								System.out.println(allOrder);
+								int productId = allOrder.getProductId();
+								Stock stock = new Stock(productId);
+								StackDao stockDao = new StackDao();
+								Stock productId1 = stockDao.validateProductId(productId);
+								String productName = productId1.getProductName();
+								int userId1 = allOrder.getUserId();
+								int quantity = allOrder.getQunatity();
+								double totalprice = allOrder.getTotalPrice();
+								Purchase purchase = new Purchase(0, productId, userId1, productName, quantity,
+										totalprice, null, null);
+								PuruchaseDao purchaseDao = new PuruchaseDao();
+								purchaseDao.insert(purchase);
+								Cart cartdelete = new Cart(0, userId1, productId, 0, 0, null);
+								cartDao.delete(cartdelete);
+
+							}
+							break;
+						case 2:
+							System.out.println("Thank you");
+							
+							
+
+						}
+
 					} else {
 
 						System.out.println("invalid entry");
 					}
-					
-					Purchase purchase=new Purchase();
-					PuruchaseDao puruchseDao=new PuruchaseDao();
-					
+
+//		           Purchase purchase=new Purchase();
+//					PuruchaseDao puruchseDao=new PuruchaseDao();
+
 //					System.out.println("bill");
 //					InvoiceBillDao obj = new InvoiceBillDao();
 //					obj.showProduct();
@@ -202,17 +242,16 @@ public class TestMainCheck {
 						SupplierDao supplierDao = new SupplierDao();
 						supplierDao.showSupplier();
 						System.out.println("enter product name");
-					     adminpro=scan.nextLine();
-					    Supplier supplier=new Supplier(0, null, null, null, null, adminpro, 0, 0);
-					   Supplier crtSupply= supplierDao.validateProduct(adminpro);
+						adminpro = scan.nextLine();
+						Supplier supplier = new Supplier(0, null, null, null, null, adminpro, 0, 0);
+						Supplier crtSupply = supplierDao.validateProduct(adminpro);
 						System.out.println(crtSupply);
 						System.out.println("Enter product quantity");
-						
-						int adminqty=Integer.parseInt(scan.nextLine());
-						Stock pro1=new Stock(0, adminpro, adminqty, 0);
+
+						int adminqty = Integer.parseInt(scan.nextLine());
+						Stock pro1 = new Stock(0, adminpro, adminqty, 0);
 						Sdao.Adminupdated(pro1);
-						
-						
+
 						break;
 					case 2:
 						System.out.println("Enter product name");

@@ -146,5 +146,30 @@ public class StackDao {
 		return null;
 
 	}
+	public Stock validateProductId(int productId) {
+
+		String validdateQuery = "select *from stock where product_id=?";
+
+		try {
+			Connection con = ConnectionUtil.gbConnection();
+			PreparedStatement pstmt = con.prepareStatement(validdateQuery);
+			pstmt.setInt(1, productId);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				Stock stock = new Stock(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4));
+				System.out.println();
+            return stock;
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 }

@@ -9,15 +9,15 @@ import com.stockproject.model.Purchase;
 public class PuruchaseDao {
 public void insert(Purchase purchase) throws SQLException, ClassNotFoundException {
 		
-		String insertQuery="insert into purchases (product_id,user_id,product_name,quantity,total_price )values (?,?,?,?,?)";
+		String insertQuery="insert into purchases_list (product_id,user_id,product_name,quantity,total_price )values (?,?,?,?,?)";
 		
 		Connection con=ConnectionUtil.gbConnection();
 		PreparedStatement pstmt= con.prepareStatement(insertQuery);
-		
-		pstmt.setInt(1, purchase.getUserId());
-		pstmt.setString(2, purchase.getProductName());
-		pstmt.setInt(3, purchase.getOrderQty());
-		pstmt.setDouble(4, purchase.getTotalPrice());
+		pstmt.setInt(1, purchase.getProductId());
+		pstmt.setInt(2, purchase.getUserId());
+		pstmt.setString(3, purchase.getProductName());
+		pstmt.setInt(4, purchase.getOrderQty());
+		pstmt.setDouble(5, purchase.getTotalPrice());
 		//pstmt.setDate(5, new java.sql.Date( purchase.getOrderDate().getTime()));
 		int i=pstmt.executeUpdate();
 		System.out.println(i+ "inserted");

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stockproject.model.Cart;
+import com.stockproject.model.Purchase;
 
 public class CartDao {
 
@@ -39,20 +40,54 @@ public class CartDao {
 		}
 
 	}
-	public static List<Cart> cartDetails(Cart cart) throws ClassNotFoundException, SQLException {
-		List<Cart> cart1=new ArrayList<Cart>();
-		String alluser="Select * from cart";
+	
+public List<Cart>allcart(Cart cart){
+	List<Cart>cartDetails=new ArrayList<Cart>();
+	String insertquery="select*from cart where user_id=?";
+	
+	try {
+		Connection con=ConnectionUtil.gbConnection();
+		PreparedStatement pstmt = con.prepareStatement(insertquery);
+		pstmt.setInt(1, cart.getUserId());
+		ResultSet rs=pstmt.executeQuery();
+		while(rs.next()){
+			
+			Cart cart1=new Cart(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getDate(6));
+			System.out.println(cart1);
+			cartDetails.add(cart1);
+			System.out.println(cart1);
+			
+		}} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return cartDetails;
+			
+			
+			
+}		
+	public void delete(Cart cart) throws SQLException, ClassNotFoundException {
 		
-		Connection con = ConnectionUtil.gbConnection();
-		PreparedStatement stmt=con.prepareStatement(alluser);
-		ResultSet rs=stmt.executeQuery();
-		while(rs.next())
-		{
- Userdetail detail=new Userdetail(rs.getString(1),rs.getString(2),rs.getString(3),Long.parseLong(rs.getString(4)),rs.getInt(5),rs.getString(6));
+		String deleteQuery="delete from cart where  product_id=? and user_id=?";
+		
+		Connection con=ConnectionUtil.gbConnection();
+		PreparedStatement pstmt= con.prepareStatement(deleteQuery);
+		
+		pstmt.setInt(1, cart.getProductId());
+		pstmt.setInt(2, cart.getUserId());
+		
+		int i=pstmt.executeUpdate();
+		System.out.println(i+"delete");
 		}
-		     cartDetails.add(detail);
-		}
-		return cart1;
+		
+			
+			
+			
+			
+			
+}		
 
 
-}
